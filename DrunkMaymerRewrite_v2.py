@@ -36,8 +36,9 @@ begTimer = 50
 digTimer = 45
 fishTimer = 43
 huntTimer = 40
+depTimer = 120
 
-token = isBeg = isDig = isFish = isHunt = channel_id = None
+token = isBeg = isDig = isFish = isHunt = isDep = channel_id = None
 
 #color class, to format the message
 class Color:
@@ -75,16 +76,20 @@ class AutoFarmer:
         bThread.start()
 
     def dig(self):
-        dThread = threading.Thread(target=self.send, args=("pls beg",))
+        dThread = threading.Thread(target=self.send, args=("pls dig",))
         dThread.start()
 
     def fish(self):
-        fThread = threading.Thread(target=self.send, args=("pls beg",))
+        fThread = threading.Thread(target=self.send, args=("pls fish",))
         fThread.start()
 
     def hunt(self):
-        hThread = threading.Thread(target=self.send, args=("pls beg",))
+        hThread = threading.Thread(target=self.send, args=("pls hunt",))
         hThread.start()
+
+    def dep(self):
+        depThread = threading.Thread(target=self.send, args=("pls dep all",))
+        depThread.start()
 
     def send(self, content):
         r = requests.post(f'https://discordapp.com/api/v6/channels/{self.channel_id}/messages', headers=self.headers, json={'content': content})
@@ -104,13 +109,13 @@ class SettingsHandler:
         try:
             with open("settings.json", "r")as f:
                 options = json.load(f)
-                self.saveVariables(options['token'], options['beg'], options['dig'], options['fish'], options['hunt'], options['channel_id'])
+                self.saveVariables(options['token'], options['beg'], options['dig'], options['fish'], options['hunt'], options['dep'],options['channel_id'])
                 return options
         except FileNotFoundError:
             return "File not found"
 
-    def write(self, token, beg, dig, fish, hunt, channel_id):
-        setting = {"token": token, "beg": beg, "dig": dig, "fish": fish, "hunt": hunt, "channel_id": channel_id}
+    def write(self, token, beg, dig, fish, hunt, dep, channel_id):
+        setting = {"token": token, "beg": beg, "dig": dig, "fish": fish, "hunt": hunt, "dep": dep,"channel_id": channel_id}
         try:
             with open("settings.json", "x")as f:
                 json.dump(setting, f)
@@ -119,35 +124,37 @@ class SettingsHandler:
             with open("settings.json", "w")as f:
                 json.dump(setting, f)
                 f.close()
-        self.saveSettings(token, beg, dig, fish, hunt, channel_id)
-        self.saveVariables(token, beg, dig, fish, hunt, channel_id)
+        self.saveSettings(token, beg, dig, fish, hunt, dep, channel_id)
+        self.saveVariables(token, beg, dig, fish, hunt, dep, channel_id)
         return setting
 
-    def saveVariables(self, _token, beg, dig, fish, hunt, _channel_id):
-        global token, isBeg, isDig, isFish, isHunt, channel_id
+    def saveVariables(self, _token, beg, dig, fish, hunt, dep, _channel_id):
+        global token, isBeg, isDig, isFish, isHunt, isDep,channel_id
         token = _token
         isBeg = beg
         isDig = dig
         isFish = fish
         isHunt = hunt
+        isDep = dep
         channel_id = _channel_id
 
-    def saveSettings(self, token, beg, dig, fish, hunt, channel_id):
+    def saveSettings(self, token, beg, dig, fish, hunt, dep, channel_id):
         global settings
-        settings = {"token": token, "beg": beg, "dig": dig, "fish": fish, "hunt": hunt, "channel_id": channel_id}
+        settings = {"token": token, "beg": beg, "dig": dig, "fish": fish, "hunt": hunt, "dep": dep,"channel_id": channel_id}
 
 #autofarm display class
 class Display:
     def __init__(self) -> None:
         pass
 
-    def update(self, begTimer, digTimer, fishTimer, huntTimer):
-        print("\033[F" * 5)
+    def update(self, begTimer, digTimer, fishTimer, huntTimer, depTimer):
+        print("\033[F" * 6)
         print(
             color.timer(begTimer) + "Beg Command" + " " * 10, #spaces were added to overwrite the entire line,
             color.timer(digTimer) + "Dig Command" + " " * 10, #as without spaces the length difference would cause a display issue
             color.timer(fishTimer) + "Fish Command" + " " * 10,
             color.timer(huntTimer) + "Hunt Command" + " " * 10,
+            color.timer(depTimer) + "Dep Command" + " " * 10,
             sep="\n"
             )
 
@@ -182,7 +189,7 @@ def settings_input(option):
 
 #settings setup
 def setup_settings(color):
-    global settings, token, isBeg, isDig, isFish, isHunt, channel_id
+    global settings, token, isBeg, isDig, isFish, isHunt, isDep, channel_id
 
     print("\n===== Settings Setup =====")
     token = input("User Token pls (We won't hack ur account don't worry)\nIf you need help, visit https://www.youtube.com/watch?v=YEgFvgg7ZPI&t=45s\n > ")
@@ -191,10 +198,11 @@ def setup_settings(color):
     isDig = settings_input("digging")
     isFish = settings_input("fishing")
     isHunt = settings_input("hunting")
+    isDep = settings_input("depositing")
     print("===== End of Setup =====")
     print("\n" + color.positive() + "Writing to settings file...")
     settingsHandler = SettingsHandler()
-    settings = settingsHandler.write(token, isBeg, isDig, isFish, isHunt, "")
+    settings = settingsHandler.write(token, isBeg, isDig, isFish, isHunt, isDep,"")
     print(color.positive() + "Successfully wrote settings!")
 
 #put colors to screen
@@ -231,7 +239,7 @@ def initialize():
 
     if channel_id == "" or channel_id == None:
         channel_id = input(color.negative() + "Missing Channel Id\nPls input Channel Id: ")
-        settingsHandler.write(token, isBeg, isDig, isFish, isHunt, channel_id)
+        settingsHandler.write(token, isBeg, isDig, isFish, isHunt, isDep, channel_id)
 
     else:
         choice = input(color.positive() + "Channel id: " + channel_id + " detected, would you like to change it? (y for yes, any other input for no)\n > ")
@@ -242,7 +250,7 @@ def initialize():
 
 #auto farm
 def auto_farm(token, channel_id):
-    global begTimer, digTimer, fishTimer, huntTimer
+    global begTimer, digTimer, fishTimer, huntTimer, depTimer
 
     #init display
     display = Display()
@@ -259,9 +267,10 @@ def auto_farm(token, channel_id):
     if isDig: autofarmer.dig()
     if isFish: autofarmer.fish()
     if isHunt: autofarmer.hunt()
+    if isDep: autofarmer.dep()
 
     #make space on screen for display output
-    print('\n'*4, end="")
+    print('\n'*5, end="")
     
     while True:
         time.sleep(1)
@@ -282,17 +291,23 @@ def auto_farm(token, channel_id):
             autofarmer.hunt()
             huntTimer = 40
 
+        if depTimer == 0 and isDep:
+            autofarmer.dep()
+            depTimer = 120
+
         begTimer -= 1
         digTimer -= 1
         fishTimer -= 1
         huntTimer -= 1
+        depTimer -= 1
 
         begDisplay = "DISABLED" if isBeg == False else begTimer
         digDisplay = "DISABLED" if isDig == False else digTimer
         fishDisplay = "DISABLED" if isFish == False else fishTimer
         huntDisplay = "DISABLED" if isHunt == False else huntTimer
+        depDisplay = "DISABLED" if isDep == False else depTimer
 
-        display.update(begDisplay, digDisplay, fishDisplay, huntDisplay)
+        display.update(begDisplay, digDisplay, fishDisplay, huntDisplay, depDisplay)
 
 #main function
 def main():

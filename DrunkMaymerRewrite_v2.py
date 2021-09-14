@@ -138,10 +138,10 @@ class Display:
     def update(self, begTimer, digTimer, fishTimer, huntTimer):
         print("\033[F" * 5)
         print(
-            color.timer(begTimer) + "Beg Command",
-            color.timer(digTimer) + "Dig Command",
-            color.timer(fishTimer) + "Fish Command",
-            color.timer(huntTimer) + "Hunt Command",
+            color.timer(begTimer) + "Beg Command" + " " * 10, #spaces were added to overwrite the entire line,
+            color.timer(digTimer) + "Dig Command" + " " * 10, #as without spaces the length difference would cause a display issue
+            color.timer(fishTimer) + "Fish Command" + " " * 10,
+            color.timer(huntTimer) + "Hunt Command" + " " * 10,
             sep="\n"
             )
 

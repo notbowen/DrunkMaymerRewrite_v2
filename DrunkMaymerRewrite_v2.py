@@ -14,6 +14,7 @@
 ===== Functions to be added =====
 1. Search, and all button related currency commands (once i figure out HOW THOSE DAMN BUTTONS WORK)
 2. work (maybe)
+3. Auto deposit
 =================================
 """
 
@@ -23,6 +24,7 @@ import ctypes
 import json
 import time
 import sys
+import threading
 
 from termcolor import colored
 
@@ -30,9 +32,9 @@ from termcolor import colored
 settings = None
 color = None
 
-begTimer = 45
-digTimer = 40
-fishTimer = 40
+begTimer = 50
+digTimer = 45
+fishTimer = 43
 huntTimer = 40
 
 token = isBeg = isDig = isFish = isHunt = channel_id = None
@@ -69,16 +71,20 @@ class AutoFarmer:
         self.headers = {'Authorization': token}
 
     def beg(self):
-        self.send("pls beg")
+        bThread = threading.Thread(target=self.send, args=("pls beg",))
+        bThread.start()
 
     def dig(self):
-        self.send("pls dig")
+        dThread = threading.Thread(target=self.send, args=("pls beg",))
+        dThread.start()
 
     def fish(self):
-        self.send("pls fish")
+        fThread = threading.Thread(target=self.send, args=("pls beg",))
+        fThread.start()
 
     def hunt(self):
-        self.send("pls hunt")
+        hThread = threading.Thread(target=self.send, args=("pls beg",))
+        hThread.start()
 
     def send(self, content):
         r = requests.post(f'https://discordapp.com/api/v6/channels/{self.channel_id}/messages', headers=self.headers, json={'content': content})

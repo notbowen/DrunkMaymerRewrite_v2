@@ -13,7 +13,7 @@ https://www.youtube.com/watch?v=YEgFvgg7ZPI&t=38s (This video isn't mine, found 
 1. Go to Settings > Advanced and enable Developer Mode
 2. Right click the channel you want to send messages to, and click "Copy ID"
 
-# Common Errors and how to fix
+# Common Errors and How to Fix
 ## 1. Error, couldn't find sell data, skipped selling
 This is a script issue which happens when it cannot find the Dank Memer response. (I'm trying to fix it so it can sell all items)
 

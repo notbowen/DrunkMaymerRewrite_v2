@@ -13,20 +13,20 @@ https://www.youtube.com/watch?v=YEgFvgg7ZPI&t=38s (This video isn't mine, found 
 1. Go to Settings > Advanced and enable Developer Mode
 2. Right click the channel you want to send messages to, and click "Copy ID"
 
-## Common Errors and how to fix
-### 1. Error, couldn't find sell data, skipped selling
+# Common Errors and how to fix
+## 1. Error, couldn't find sell data, skipped selling
 This is a script issue which happens when it cannot find the Dank Memer response. (I'm trying to fix it so it can sell all items)
 
-### 2. Display Error, where the error logs would look screwed up
+## 2. Display Error, where the error logs would look screwed up
 This is a script error, and I'm trying to find a way to fix it.
 
-### 3. Response 401, Unauthorized
+## 3. Response 401, Unauthorized
 This means that the token or channel id was invalid, and discord could not send the message.
 
-How to fix:
+###How to fix:
 1. Check if your token or channel id is correct.
 2. Rerun the settings setup to change your token or channel id.
 
-## How to report bugs
+# How to report bugs
 1. Take a screenshot of the error output. (In order to get the error output if the script crashes, run it via command prompt)
 2. Create a new issue and upload the screenshot.

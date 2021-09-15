@@ -356,7 +356,7 @@ def initialize():
             if choice.lower() == "y": setup_settings()
             else: print(color.negative() + "No changes were made!")
     except FileNotFoundError:
-        print(color.negative() + "Missing settings file..")
+        print(color.negative() + "Missing settings file...")
         setup_settings()
 
     #change channel id

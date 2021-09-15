@@ -23,7 +23,7 @@ This is a script error, and I'm trying to find a way to fix it.
 ## 3. Response 401, Unauthorized
 This means that the token or channel id was invalid, and discord could not send the message.
 
-###How to fix:
+### How to fix:
 1. Check if your token or channel id is correct.
 2. Rerun the settings setup to change your token or channel id.
 

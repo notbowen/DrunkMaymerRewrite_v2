@@ -20,15 +20,15 @@
 """
 
 #Libraries
-from json.decoder import JSONDecodeError
-import requests
 import ctypes
+import datetime
 import json
-import time
 import sys
 import threading
-import datetime
+import time
+import requests
 
+from json.decoder import JSONDecodeError
 from termcolor import colored
 
 #variables
@@ -357,7 +357,7 @@ def initialize():
             else: print(color.negative() + "No changes were made!")
     except FileNotFoundError:
         print(color.negative() + "Missing settings file...")
-        setup_settings(color)
+        setup_settings()
 
     #change channel id
     settingsHandler = SettingsHandler()

@@ -37,8 +37,8 @@ color = None
 
 begTimer = 55
 digTimer = 50
-fishTimer = 45
-huntTimer = 40
+fishTimer = 47
+huntTimer = 42
 depTimer = 120
 
 exitProgram = False
@@ -424,12 +424,12 @@ def auto_farm(token, channel_id):
         if fishTimer == 0 and isFish:
             autofarmer.fish()
             autofarmer.sell()
-            fishTimer = 45
+            fishTimer = 47
             check_exit()
 
         if huntTimer == 0 and isHunt:
             autofarmer.hunt()
-            huntTimer = 40
+            huntTimer = 42
             check_exit()
 
         if depTimer == 0 and isDep:

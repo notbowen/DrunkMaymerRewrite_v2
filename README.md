@@ -23,7 +23,7 @@ This means that the token or channel id was invalid, and discord could not send 
 2. Rerun the settings setup to change your token or channel id.
 
 ## 4. \[Errno 13\] Permission denied: 'settings.json'
-This means that the script was unable to read/write to the file.
+This means that the script was unable to read/write to the file due to the lack of permissions.
 
 ### How to fix:
 1. Right click the .exe
